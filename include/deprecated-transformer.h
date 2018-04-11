@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // -*- mode: c++; c-basic-offset: 2; indent-tabs-mode: nil; -*-
 // Copyright (C) 2014 Henner Zeller <h.zeller@acm.org>
 // Copyright (C) 2015 Christoph Friedrich <christoph.friedrich@vonaffenfels.de>
@@ -15,8 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
+/*
+ * Deprecated.
+ *
+ * Use PixelMapper instead. See pixel-mapper.h
+ */
 #ifndef RPI_TRANSFORMER_H
 #define RPI_TRANSFORMER_H
+
+#ifndef REMOVE_DEPRECATED_TRANSFORMERS
 
 #include <vector>
 #include <cstddef>
@@ -117,15 +123,5 @@ private:
 
 } // namespace rgb_matrix
 
-#endif // RPI_TRANSFORMER_H
-=======
-/*
- * NOTE:
- *
- * Transformers are deprecated. For the kind of mappings they were be
- * used by they turned out to be too complicated.
- *
- * They have been superseeded by the simpler PixelMapper, see pixel-mapper.h
- */
-#include "deprecated-transformer.h"
->>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
+#endif  // REMOVE_DEPRECATED_TRANSFORMERS
+#endif  // RPI_TRANSFORMER_H

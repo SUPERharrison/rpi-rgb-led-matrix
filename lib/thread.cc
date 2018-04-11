@@ -18,6 +18,10 @@
 #include <sched.h>
 #include <stdio.h>
 #include <assert.h>
+<<<<<<< HEAD
+=======
+#include <string.h>
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
 namespace rgb_matrix {
 void *Thread::PthreadCallRun(void *tobject) {
@@ -42,12 +46,22 @@ void Thread::WaitStopped() {
 void Thread::Start(int priority, uint32_t affinity_mask) {
   assert(!started_);  // Did you call WaitStopped() ?
   pthread_create(&thread_, NULL, &PthreadCallRun, this);
+<<<<<<< HEAD
+=======
+  int err;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
   if (priority > 0) {
     struct sched_param p;
     p.sched_priority = priority;
+<<<<<<< HEAD
     if (pthread_setschedparam(thread_, SCHED_FIFO, &p) != 0) {
       perror("FYI: Can't set realtime thread priority");
+=======
+    if ((err = pthread_setschedparam(thread_, SCHED_FIFO, &p))) {
+      fprintf(stderr, "FYI: Can't set realtime thread priority=%d %s\n",
+              priority, strerror(err));
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
     }
   }
 
@@ -59,8 +73,14 @@ void Thread::Start(int priority, uint32_t affinity_mask) {
         CPU_SET(i, &cpu_mask);
       }
     }
+<<<<<<< HEAD
     if (pthread_setaffinity_np(thread_, sizeof(cpu_mask), &cpu_mask) != 0) {
       perror("FYI: Couldn't set affinity");
+=======
+    if ((err=pthread_setaffinity_np(thread_, sizeof(cpu_mask), &cpu_mask))) {
+      fprintf(stderr, "FYI: Couldn't set affinity 0x%x: %s\n",
+              affinity_mask, strerror(err));
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
     }
   }
 

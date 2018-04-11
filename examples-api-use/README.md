@@ -13,26 +13,45 @@ $ sudo ./demo
 usage: ./demo <options> -D <demo-nr> [optional parameter]
 Options:
         -D <demo-nr>              : Always needs to be set
+<<<<<<< HEAD
         -L                        : Large display, in which each chain is 'folded down'
                                     in the middle in an U-arrangement to get more vertical space.
         -R <rotation>             : Sets the rotation of matrix. Allowed: 0, 90, 180, 270. Default: 0.
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         -t <seconds>              : Run for these number of seconds, then exit.
         --led-gpio-mapping=<name> : Name of GPIO mapping used. Default "regular"
         --led-rows=<rows>         : Panel rows. Typically 8, 16, 32 or 64. (Default: 32).
         --led-cols=<cols>         : Panel columns. Typically 32 or 64. (Default: 32).
         --led-chain=<chained>     : Number of daisy-chained panels. (Default: 1).
+<<<<<<< HEAD
         --led-parallel=<parallel> : For A/B+ models or RPi2,3b: parallel chains. range=1..3 (Default: 1).
         --led-multiplexing=<0..3> : Multiplexing type: 0=direct; 1=strip; 2=checker; 3=spiral (Default: 0)
         --led-pwm-bits=<1..11>    : PWM bits (Default: 11).
         --led-brightness=<percent>: Brightness in percent (Default: 100).
         --led-scan-mode=<0..1>    : 0 = progressive; 1 = interlaced (Default: 0).
         --led-row-addr-type=<0..1>: 0 = default; 1=AB-addressed panels (Default: 0).
+=======
+        --led-parallel=<parallel> : Parallel chains. range=1..3 (Default: 1).
+        --led-multiplexing=<0..6> : Mux type: 0=direct; 1=Stripe; 2=Checkered; 3=Spiral; 4=ZStripe; 5=ZnMirrorZStripe; 6=coreman (Default: 0)
+        --led-pixel-mapper        : Semicolon-separated list of pixel-mappers to arrange pixels.
+                                    Optional params after a colon e.g. "U-mapper;Rotate:90"
+                                    Available: "Rotate", "U-mapper". Default: ""
+        --led-pwm-bits=<1..11>    : PWM bits (Default: 11).
+        --led-brightness=<percent>: Brightness in percent (Default: 100).
+        --led-scan-mode=<0..1>    : 0 = progressive; 1 = interlaced (Default: 0).
+        --led-row-addr-type=<0..2>: 0 = default; 1 = AB-addressed panels; 2 = direct row select(Default: 0).
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         --led-show-refresh        : Show refresh rate.
         --led-inverse             : Switch if your matrix has inverse colors on.
         --led-rgb-sequence        : Switch if your matrix has led colors swapped (Default: "RGB")
         --led-pwm-lsb-nanoseconds : PWM Nanoseconds for LSB (Default: 130)
         --led-no-hardware-pulse   : Don't use hardware pin-pulse generation.
+<<<<<<< HEAD
         --led-slowdown-gpio=<0..2>: Slowdown GPIO. Needed for faster Pis and/or slower panels (Default: 1).
+=======
+        --led-slowdown-gpio=<0..2>: Slowdown GPIO. Needed for faster Pis/slower panels (Default: 1).
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         --led-daemon              : Make the process run in the background as daemon.
         --led-no-drop-privs       : Don't drop privileges from 'root' after initializing the hardware.
 Demos, choosen with -D
@@ -103,7 +122,11 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+<<<<<<< HEAD
   // matrix->ApplyStaticTransformer(...);  // Optional
+=======
+  // matrix->ApplyPixelMapper(...);  // Optional
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
   // Do your own command line handling with the remaining options.
 
@@ -212,8 +235,20 @@ Read the [`minimal-example.cc`](./minimal-example.cc) to get started, then
 have a look into [`demo-main.cc`](./demo-main.cc).
 
 ## Remapping coordinates ##
+<<<<<<< HEAD
 You might choose a different physical layout than the wiring provides.
 
+=======
+
+You might choose a different physical layout than the wiring provides.
+
+There is an option `--led-pixel-mapper` that allows you to choose between
+some re-mapping options, and also programmatic ways to do so.
+
+### Standard mappers
+
+#### U-mapper
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 Say you have 4 displays with 32x32 and only a single output
 like with a Raspberry Pi 1 or the Adafruit HAT -- if we chain
 them, we get a display 32 pixel high, (4*32)=128 pixel long. If we arrange
@@ -232,6 +267,7 @@ is arranged in this U-shape (on its side)
     [>][>]
 ```
 
+<<<<<<< HEAD
 How can we make this 'folded' 128x32 screen behave like a 64x64 screen ?
 
 In the API, there is an interface to implement,
@@ -285,6 +321,112 @@ the defaults you used to create the Matrix:
   matrix->ApplyStaticTransformer(UArrangementTransformer(my_defaults.parallel));
 ```
 
+=======
+Now we need to internally map pixels the pixels so that the 'folded' 128x32
+screen behaves like a 64x64 screen.
+
+There is a pixel-mapper that can help with this "U-Arrangement", you choose
+it with `--led-pixel-mapper=U-mapper`. So in this particular case,
+
+```
+  ./demo --led-chain=4 --led-pixel-mapper="U-mapper"
+```
+
+This works for longer and more than one chain as well. Here an arrangement with
+two chains with 8 panels each
+
+```
+   [<][<][<][<]  }--- Pi connector #1
+   [>][>][>][>]
+   [<][<][<][<]  }--- Pi connector #2
+   [>][>][>][>]
+```
+
+(`--led-chain=8 --led-parallel=2 --led-pixel-mapper="U-mapper"`).
+
+#### Rotate
+
+The "Rotate" mapper allows you to rotate your screen. It takes an angle
+as parameter after a colon:
+
+```
+  ./demo --led-pixel-mapper="Rotate:90"
+```
+
+#### Combining Mappers
+
+You can chain multiple mappers in the configuration, by separating them
+with a semicolon. The mappers are applied in the sequence you give them, so
+if you want to arrange a couple of panels with the U-arrangement, and then
+rotate the resulting screen, use
+
+```
+  ./demo --led-chain=8 --led-parallel=3 --led-pixel-mapper="U-mapper;Rotate:90"
+```
+
+Here, we first create a 128x192 screen (4 panels wide (`4*32=128`),
+with three folded chains (`6*32=192`)) and then rotate it by 90 degrees to
+get a 192x128 screen.
+
+#### Programmatic access
+
+If you want to choose these mappers programmatically from your program and
+not via the flags, you can do this by setting the `pixel_mapper_config` option
+in the options struct in C++ or Python.
+
+```
+  options.pixel_mapper_config = "Rotate:90";
+```
+
+### Writing your own mappers
+
+If you want to write your own mappers, e.g. if you have a fancy panel
+arrangement, you can do so using the API provided.
+
+In the API, there is an interface to implement,
+a [`PixelMapper`](../include/pixel-mapper.h) that allows to program
+re-arrangements of pixels in any way. You can plug such an implementation of
+a `PixelMapper` into the RGBMatrix to use it:
+
+```
+  bool RGBMatrix::ApplyPixelMapper(const PixelMapper *mapper);
+```
+
+If you want, you can also register your PixelMapper globally before you
+parse the command line options; then this pixel-mapper is automatically
+provided in the `--led-pixel-mapper` command line option:
+
+```
+   RegisterPixelMapper(new MyOwnPixelMapper());
+   RGBMatrix *matrix = rgb_matrix::CreateMatrixFromFlags(...);
+```
+
+Now your mapper can be used alongside (and combined with) the standard
+mappers already there (e.g. "U-mapper" or "Rotate"). Your mapper can have
+parameters: In the command-line flag, parameters provided after `:` are passed
+as-is to your `SetParameters()` implementation
+(e.g. using `--led-pixel-mapper="Rotate:90"`, the `Rotate` mapper
+gets a parameter string `"90"` as parameter).
+
+#### Multiplex Mappers
+
+Sometimes you even need this for the panel itself: In some panels
+(typically the 'outdoor panels', often with 1:4 multiplexing) the pixels
+are not mapped in a straight-forward way, but in a snake arrangement for
+instance.
+
+There are simplified pixel mappers for this purpose, the
+[multiplex mappers](../lib/multiplex-mappers.cc). These are defined there
+and then can be accessed via the command line flag `--led-multiplexing=...`.
+
+If you find that whatever parameter you give to `--led-multiplexing=` doesn't
+work, you might need to write your own mapper (extend `MultiplexMapperBase`
+and implement the one method `MapSinglePanel()`). Then register them with
+the `CreateMultiplexMapperList()` function in that file. When you do this,
+this will automatically become available in the `--led-multiplexing=` command
+line option in C++ and Python.
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 [run-vid]: ../img/running-vid.jpg
 [git-submodules]: http://git-scm.com/book/en/Git-Tools-Submodules
 [pixelpush]: https://github.com/hzeller/rpi-matrix-pixelpusher

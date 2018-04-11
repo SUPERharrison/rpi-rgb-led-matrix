@@ -5,7 +5,12 @@
 ##
 OBJECTS=gpio.o led-matrix.o options-initialize.o framebuffer.o \
         thread.o bdf-font.o graphics.o transformer.o led-matrix-c.o \
+<<<<<<< HEAD
 	hardware-mapping.o content-streamer.o multiplex-transformers.o
+=======
+	hardware-mapping.o content-streamer.o pixel-mapper.o multiplex-mappers.o
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 TARGET=librgbmatrix
 
 # There are several different pinouts for various breakout boards that uses
@@ -95,6 +100,47 @@ HARDWARE_DESC?=regular
 # Flag: --led-no-hardware-pulses
 #DEFINES+=-DDISABLE_HARDWARE_PULSES
 
+<<<<<<< HEAD
+=======
+# If defined, remove deprecated transformers from the API.
+# This will eventually be enabled by default and at some point the code
+# in question will be removed from the code-base, so don't use transformers.
+# Use PixelMappers instead (include/pixel-mapper.h)
+#DEFINES+=-DREMOVE_DEPRECATED_TRANSFORMERS
+
+# --- EXPERIMENTAL --
+# This allows to fix the refresh rate to a particular refresh time in
+# microseconds.
+#
+# This can be used to mitigate some situations in which you have a rare
+# faint flicker, which can happen due to hardware events (network access)
+# or other situations such as other IO or heavy memory access by other
+# processes (all of which seem to break the isolation we request from the
+# kernel. You did set isolcpus=3 right ?)
+# You trade a slightly slower refresh rate and display brightness for less
+# visible flicker situations.
+#
+# For this to calibrate, run your program for a while with --led-show-refresh
+# and watch the line that shows the refresh time and the maximum microseconds
+# for a frame observed. The maximum number is updated whenever the frame
+# refresh take a little bit longer. So wait a while until that value doesn't
+# change anymore (at least a minute, so that you catch tasks that happen once
+# a minute). Some value might read e.g.
+#   204.6Hz max: 5133usec
+# Now take this maximum value you see there (here: 5133) and put in
+# this define (don't forget to remove the # in front).
+#
+# The refresh rate will now be adapted to always have this amount of time
+# between frames, so faster refreshes will be slowed down, but the occasional
+# delayed frame will fit into the time-window as well, thus reducing visible
+# brightness fluctuations.
+#
+# You can play with value a little and reduce until you find a good balance
+# between refresh rate (which is reduce the higher this value is) and
+# flicker suppression (which is better with higher values).
+#DEFINES+=-DFIXED_FRAME_MICROSECONDS=5000
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 # ---- Pinout options for hardware variants; usually no change needed here ----
 
 # Uncomment if you want to use the Adafruit HAT with stable PWM timings.

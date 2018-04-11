@@ -7,7 +7,11 @@
 // This is a grab-bag of various demos and not very readable.
 #include "led-matrix.h"
 #include "threaded-canvas-manipulator.h"
+<<<<<<< HEAD
 #include "transformer.h"
+=======
+#include "pixel-mapper.h"
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 #include "graphics.h"
 
 #include <assert.h>
@@ -17,6 +21,10 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+<<<<<<< HEAD
+=======
+#include <string.h>
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 #include <unistd.h>
 
 #include <algorithm>
@@ -1023,10 +1031,13 @@ static int usage(const char *progname) {
   fprintf(stderr, "Options:\n");
   fprintf(stderr,
           "\t-D <demo-nr>              : Always needs to be set\n"
+<<<<<<< HEAD
           "\t-L                        : Large display, in which each chain is 'folded down'\n"
           "\t                            in the middle in an U-arrangement to get more vertical space.\n"
           "\t-R <rotation>             : Sets the rotation of matrix. "
           "Allowed: 0, 90, 180, 270. Default: 0.\n"
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
           "\t-t <seconds>              : Run for these number of seconds, then exit.\n");
 
 
@@ -1054,8 +1065,11 @@ int main(int argc, char *argv[]) {
   int runtime_seconds = -1;
   int demo = -1;
   int scroll_ms = 30;
+<<<<<<< HEAD
   int rotation = 0;
   bool large_display = false;
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
   const char *demo_parameter = NULL;
   RGBMatrix::Options matrix_options;
@@ -1087,6 +1101,7 @@ int main(int argc, char *argv[]) {
       scroll_ms = atoi(optarg);
       break;
 
+<<<<<<< HEAD
     case 'R':
       rotation = atoi(optarg);
       break;
@@ -1101,6 +1116,21 @@ int main(int argc, char *argv[]) {
 
       // These used to be options we understood, but deprecated now. Accept
       // but don't mention in usage()
+=======
+      // These used to be options we understood, but deprecated now. Accept
+      // but don't mention in usage()
+    case 'R':
+      fprintf(stderr, "-R is deprecated. "
+              "Use --led-pixel-mapper=\"Rotate:%s\" instead.\n", optarg);
+      return 1;
+      break;
+
+    case 'L':
+      fprintf(stderr, "-L is deprecated. Use\n\t--led-pixel-mapper=\"U-mapper\" --led-chain=4\ninstead.\n");
+      return 1;
+      break;
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
     case 'd':
       runtime_opt.daemon = 1;
       break;
@@ -1143,16 +1173,20 @@ int main(int argc, char *argv[]) {
     return usage(argv[0]);
   }
 
+<<<<<<< HEAD
   if (rotation % 90 != 0) {
     fprintf(stderr, TERM_ERR "Rotation %d not allowed! "
             "Only 0, 90, 180 and 270 are possible.\n" TERM_NORM, rotation);
     return 1;
   }
 
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   RGBMatrix *matrix = CreateMatrixFromOptions(matrix_options, runtime_opt);
   if (matrix == NULL)
     return 1;
 
+<<<<<<< HEAD
   if (large_display) {
     // Mapping the coordinates of a 32x128 display mapped to a square of 64x64.
     // Or any other U-arrangement.
@@ -1164,6 +1198,8 @@ int main(int argc, char *argv[]) {
     matrix->ApplyStaticTransformer(RotateTransformer(rotation));
   }
 
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   printf("Size: %dx%d. Hardware gpio mapping: %s\n",
          matrix->width(), matrix->height(), matrix_options.hardware_mapping);
 

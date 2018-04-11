@@ -14,6 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
+<<<<<<< HEAD
+=======
+/*
+ * NOTE:
+ *
+ * Transformers are deprecated. For the kind of mappings they were be
+ * used by they turned out to be too complicated.
+ *
+ * They have been superseeded by the simpler PixelMapper, see pixel-mapper.h
+ */
+
+#ifndef REMOVE_DEPRECATED_TRANSFORMERS
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 #include <assert.h>
 #include <stdio.h>
 
@@ -229,3 +242,8 @@ Canvas *LargeSquare64x64Transformer::Transform(Canvas *output) {
   return rotated_.Transform(arrange_.Transform(output));
 }
 } // namespace rgb_matrix
+<<<<<<< HEAD
+=======
+
+#endif // REMOVE_DEPRECATED_TRANSFORMERS
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7

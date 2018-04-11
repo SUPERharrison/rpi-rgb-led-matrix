@@ -572,4 +572,12 @@ PinPulser *PinPulser::Create(GPIO *io, uint32_t gpio_mask,
     return new TimerBasedPinPulser(io, gpio_mask, nano_wait_spec);
   }
 }
+<<<<<<< HEAD
+=======
+
+uint32_t GetMicrosecondCounter() {
+  return timer1Mhz ? *timer1Mhz : 0;
+}
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 } // namespace rgb_matrix

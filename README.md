@@ -66,6 +66,10 @@ Type w*h | Scan Multiplexing | Program commandline flags    | Remark
 32x32 |  1:8              | --led-rows=32 --led-multiplexing=1 | few mux choices
 32x16 |  1:8              | --led-rows=16                |
 32x16 |  1:4              | --led-rows=16 --led-multiplexing=1 | few mux choices
+<<<<<<< HEAD
+=======
+32x16 |  1:4              | --led-rows=16 --led-row-addr-type=2 --led-multiplexing=4 | For direct A..D address panels.
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 ...   |
 
 These can be chained by connecting the output of one panel to the input of
@@ -82,6 +86,15 @@ Generally, the higher scan-rate (e.g. 1:8), a.k.a. outdoor panels generally
 allow faster refresh rate, but you might need to figure out the multiplexing
 mapping if one of the three provided does not work.
 
+<<<<<<< HEAD
+=======
+Some 32x16 outdoor matrixes with 1:4 scan (e.g. [Qiangli Q10(1/4) or X10(1/4)](http://qiangliled.com/products-63.html))
+have 4 address line (A, B, C, D). For such matrices is necessary to
+use `--led-row-addr-type=2` parameter. Also the matrix Qiangli Q10(1/4)
+have "Z"-stripe pixel mapping and in this case, you'd use two parameters
+at the same time `--led-row-addr-type=2 --led-multiplexing=4`.
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 Let's do it
 ------------
 This documentation is split into parts that help you through the process
@@ -130,6 +143,10 @@ The library comes as an API that you can use for your own utilities and use-case
   * There are a couple of external bindings, such as
       * [Nodejs binding] by Maxime Journaux.
       * [Go binding] by Máximo Cuadros
+<<<<<<< HEAD
+=======
+      * [Rust binding] by Vincent Pasquier
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
 ### Changing parameters via command-line flags
 
@@ -180,13 +197,21 @@ If you have some 'outdoor' panels or panels with different multiplexing,
 the following will be useful:
 
 ```
+<<<<<<< HEAD
 --led-multiplexing=<0..3> : Multiplexing type: 0=direct; 1=strip; 2=checker; 3=spiral (Default: 0)
+=======
+--led-multiplexing=<0..4> : Multiplexing type: 0=direct; 1=strip; 2=checker; 3=spiral; 4=Z-strip (Default: 0)
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 ```
 The outdoor panels have different multiplexing which allows them to be faster
 and brighter, but by default their output looks jumbled up.
 They require some pixel-mapping of which there are a few
 types you can try and hopefully one of them works for your panel; The default=0
+<<<<<<< HEAD
 is no mapping ('standard' panels), while 1, 2, or 3 are different mappings
+=======
+is no mapping ('standard' panels), while 1, 2, 3 or 4 are different mappings
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 to try with. If your panel has a different mapping, please send a pull request.
 
 Note that you have to set the `--led-rows` and `--led-cols` to the rows and
@@ -202,12 +227,31 @@ two chained panels, so then you'd use
 `--led-rows=32 --led-cols=32 --led-chain=2 --led-multiplexing=1`;
 
 ```
+<<<<<<< HEAD
 --led-row-addr-type=<0..1>: 0 = default; 1=AB-addressed panels (Default: 0).
 ```
 
 This option is useful for certain 64x64 panels, that only have an `A` and `B`
 address line. This is only tested with one panel so far, so if it doesn't work
 for you, please send a pull request.
+=======
+--led-pixel-mapper  : Semicolon-separated list of pixel-mappers.
+```
+
+Mapping the logical layout of your boards to your physical arrangement. See
+more in [Remapping coordinates](./examples-api-use#remapping-coordinates).
+
+```
+--led-row-addr-type=<0..2>: 0 = default; 1=AB-addressed panels; 2=direct row select (Default: 0).
+```
+This option is useful for certain 64x64 or 32x16 panels. For 64x64 panels,
+that only have an `A` and `B` address line, you`d use `--led-row-addr-type=1`.
+This is only tested with one panel so far, so if it doesn't work for you,
+please send a pull request.
+
+For 32x16 outdoor panels, that have have 4 address line (A, B, C, D), it is
+necessary to use `--led-row-addr-type=2`.
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
 ```
 --led-brightness=<percent>: Brightness in percent (Default: 100).
@@ -246,8 +290,14 @@ flicker - some are fine with 100Hz refresh, others need 250Hz.
 So if you are curious, this gives you the number (shown on the terminal).
 
 The refresh rate depends on a lot of factors, from `--led-rows` and `--led-chain`
+<<<<<<< HEAD
 to `--led-pwm-bits` and `--led-pwm-lsb-nanoseconds`. If you are tweaking these
 parameters, showing the refresh rate can be a useful tool.
+=======
+to `--led-pwm-bits`, `--led-pwm-lsb-nanoseconds` and `--led-pwm-dither-bits`.
+If you are tweaking these parameters, showing the refresh rate can be a
+useful tool.
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
 ```
 --led-scan-mode=<0..1>    : 0 = progressive; 1 = interlaced (Default: 0).
@@ -288,6 +338,26 @@ If you tweak this value, watch the framerate (`--led-show-refresh`) while playin
 with this number.
 
 ```
+<<<<<<< HEAD
+=======
+--led-pwm-dither-bits   : Time dithering of lower bits (Default: 0)
+```
+
+The lower bits can be time dithered, i.e. their brightness contribution is
+achieved by only showing them some frames (this is possible,
+because the PWM is implemented as binary code modulation).
+This will allow higher refresh rate (or same refresh rate with increased
+`--led-pwm-lsb-nanoseconds`).
+The disadvantage could be slightly lower brightness, in particular for longer
+chains, and higher CPU use.
+CPU use is not of concern for Rasbperry Pi 2 or 3 (as we run on a dedicated
+core anyway) but proably for Raspberry Pi 1 or Pi Zero.
+Default: no dithering; if you have a Pi 3 and struggle with low frame-rate due
+to high multiplexing panels (1:16 or 1:32) or long chains, it might be
+worthwhile to try.
+
+```
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 --led-slowdown-gpio=<0..2>: Slowdown GPIO. Needed for faster Pis and/or slower panels (Default: 1).
 ```
 
@@ -591,6 +661,13 @@ kernel for the Pi; maybe there are also hardware limitations (memory bus
 contention?). Anyway, if you have a realtime kernel configuration that you
 have optimized for this application, let me know.
 
+<<<<<<< HEAD
+=======
+To address the brightness fluctuations, you might experiment with the
+`FIXED_FRAME_MICROSECONDS` compile time option in [lib/Makefile](lib/Makefile)
+that has instructions how to set it up.
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 Fun
 ---
 I am always happy to see users successfully using the software for wonderful
@@ -606,4 +683,9 @@ things, like this installation by Dirk in Scharbeutz, Germany:
 [raspbian-lite]: https://downloads.raspberrypi.org/raspbian_lite_latest
 [Adafruit HAT]: https://www.adafruit.com/products/2345
 [Nodejs binding]: https://github.com/zeitungen/node-rpi-rgb-led-matrix
+<<<<<<< HEAD
 [Go binding]: https://github.com/mcuadros/go-rpi-rgb-led-matrix
+=======
+[Go binding]: https://github.com/mcuadros/go-rpi-rgb-led-matrix
+[Rust binding]: https://crates.io/crates/rpi-led-matrix
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7

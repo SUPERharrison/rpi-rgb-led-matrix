@@ -27,6 +27,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+<<<<<<< HEAD
+=======
+#include <algorithm>
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 #include "gpio.h"
 
 namespace rgb_matrix {
@@ -45,18 +50,30 @@ static PinPulser *sOutputEnablePulser = NULL;
 #  define SUB_PANELS_ 2
 #endif
 
+<<<<<<< HEAD
 PixelDesignator *PixelMapper::get(int x, int y) {
+=======
+PixelDesignator *PixelDesignatorMap::get(int x, int y) {
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   if (x < 0 || y < 0 || x >= width_ || y >= height_)
     return NULL;
   return buffer_ + (y*width_) + x;
 }
 
+<<<<<<< HEAD
 PixelMapper::PixelMapper(int width, int height)
+=======
+PixelDesignatorMap::PixelDesignatorMap(int width, int height)
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   : width_(width), height_(height),
     buffer_(new PixelDesignator[width * height]) {
 }
 
+<<<<<<< HEAD
 PixelMapper::~PixelMapper() {
+=======
+PixelDesignatorMap::~PixelDesignatorMap() {
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   delete [] buffer_;
 }
 
@@ -145,6 +162,49 @@ private:
   int last_row_;
 };
 
+<<<<<<< HEAD
+=======
+// The DirectABCDRowAddressSetter sets the address by one of
+// row pin ABCD for 32х16 matrix 1:4 multiplexing. The matrix has
+// 4 addressable rows. Row is selected by a low level on the
+// corresponding row address pin. Other row address pins must be in high level.
+//
+// Row addr| 0 | 1 | 2 | 3
+// --------+---+---+---+---
+// Line A  | 0 | 1 | 1 | 1
+// Line B  | 1 | 0 | 1 | 1
+// Line C  | 1 | 1 | 0 | 1
+// Line D  | 1 | 1 | 1 | 0
+class DirectABCDLineRowAddressSetter : public RowAddressSetter {
+public:
+  DirectABCDLineRowAddressSetter(int double_rows, const HardwareMapping &h)
+    : last_row_(-1) {
+	row_mask_ = h.a | h.b | h.c | h.d;
+
+	row_lines_[0] = /*h.a |*/ h.b | h.c | h.d;
+	row_lines_[1] = h.a /*| h.b*/ | h.c | h.d;
+	row_lines_[2] = h.a | h.b /*| h.c */| h.d;
+	row_lines_[3] = h.a | h.b | h.c /*| h.d*/;
+  }
+
+  virtual gpio_bits_t need_bits() const { return row_mask_; }
+
+  virtual void SetRowAddress(GPIO *io, int row) {
+    if (row == last_row_) return;
+
+    gpio_bits_t row_address = row_lines_[row % 4];
+
+    io->WriteMaskedBits(row_address, row_mask_);
+    last_row_ = row;
+  }
+
+private:
+  gpio_bits_t row_lines_[4];
+  gpio_bits_t row_mask_;
+  int last_row_;
+};
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 }
 
 const struct HardwareMapping *Framebuffer::hardware_mapping_ = NULL;
@@ -153,7 +213,11 @@ RowAddressSetter *Framebuffer::row_setter_ = NULL;
 Framebuffer::Framebuffer(int rows, int columns, int parallel,
                          int scan_mode,
                          const char *led_sequence, bool inverse_color,
+<<<<<<< HEAD
                          PixelMapper **mapper)
+=======
+                         PixelDesignatorMap **mapper)
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   : rows_(rows),
     parallel_(parallel),
     height_(rows * parallel),
@@ -187,7 +251,11 @@ Framebuffer::Framebuffer(int rows, int columns, int parallel,
   // Newly created PixelMappers then can just copy around PixelDesignators
   // from the parent PixelMapper opaquely without having to know the details.
   if (*shared_mapper_ == NULL) {
+<<<<<<< HEAD
     *shared_mapper_ = new PixelMapper(columns_, height_);
+=======
+    *shared_mapper_ = new PixelDesignatorMap(columns_, height_);
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
     for (int y = 0; y < height_; ++y) {
       for (int x = 0; x < columns_; ++x) {
         InitDefaultDesignator(x, y, (*shared_mapper_)->get(x, y));
@@ -244,6 +312,10 @@ Framebuffer::~Framebuffer() {
 /* static */ void Framebuffer::InitGPIO(GPIO *io, int rows, int parallel,
                                         bool allow_hardware_pulsing,
                                         int pwm_lsb_nanoseconds,
+<<<<<<< HEAD
+=======
+                                        int dither_bits,
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
                                         int row_address_type) {
   if (sOutputEnablePulser != NULL)
     return;  // already initialized.
@@ -270,6 +342,12 @@ Framebuffer::~Framebuffer() {
   case 1:
     row_setter_ = new ShiftRegisterRowAddressSetter(double_rows, h);
     break;
+<<<<<<< HEAD
+=======
+  case 2:
+    row_setter_ = new DirectABCDLineRowAddressSetter(double_rows, h);
+    break;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   default:
     assert(0);  // unexpected type.
   }
@@ -284,8 +362,15 @@ Framebuffer::~Framebuffer() {
   assert(result == all_used_bits);  // Impl: all bits declared in gpio.cc ?
 
   std::vector<int> bitplane_timings;
+<<<<<<< HEAD
   for (int b = 0; b < kBitPlanes; ++b) {
     bitplane_timings.push_back(pwm_lsb_nanoseconds << b);
+=======
+  uint32_t timing_ns = pwm_lsb_nanoseconds;
+  for (int b = 0; b < kBitPlanes; ++b) {
+    bitplane_timings.push_back(timing_ns);
+    if (b >= dither_bits) timing_ns *= 2;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   }
   sOutputEnablePulser = PinPulser::Create(io, h.output_enable,
                                           allow_hardware_pulsing,
@@ -501,7 +586,11 @@ void Framebuffer::CopyFrom(const Framebuffer *other) {
   memcpy(bitplane_buffer_, other->bitplane_buffer_, buffer_size_);
 }
 
+<<<<<<< HEAD
 void Framebuffer::DumpToMatrix(GPIO *io) {
+=======
+void Framebuffer::DumpToMatrix(GPIO *io, int pwm_low_bit) {
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   const struct HardwareMapping &h = *hardware_mapping_;
   gpio_bits_t color_clk_mask = 0;  // Mask of bits while clocking in.
   color_clk_mask |= h.p0_r1 | h.p0_g1 | h.p0_b1 | h.p0_r2 | h.p0_g2 | h.p0_b2;
@@ -514,8 +603,15 @@ void Framebuffer::DumpToMatrix(GPIO *io) {
 
   color_clk_mask |= h.clock;
 
+<<<<<<< HEAD
   const uint8_t half_double = double_rows_/2;
   const int pwm_to_show = pwm_bits_;  // Local copy, might change in process.
+=======
+  // Depending if we do dithering, we might not always show the lowest bits.
+  const int start_bit = std::max(pwm_low_bit, kBitPlanes - pwm_bits_);
+
+  const uint8_t half_double = double_rows_/2;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   for (uint8_t row_loop = 0; row_loop < double_rows_; ++row_loop) {
     uint8_t d_row;
     switch (scan_mode_) {
@@ -532,7 +628,11 @@ void Framebuffer::DumpToMatrix(GPIO *io) {
 
     // Rows can't be switched very quickly without ghosting, so we do the
     // full PWM of one row before switching rows.
+<<<<<<< HEAD
     for (int b = kBitPlanes - pwm_to_show; b < kBitPlanes; ++b) {
+=======
+    for (int b = start_bit; b < kBitPlanes; ++b) {
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
       gpio_bits_t *row_data = ValueAt(d_row, 0, b);
       // While the output enable is still on, we can already clock in the next
       // data.

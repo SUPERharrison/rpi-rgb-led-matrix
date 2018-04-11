@@ -95,6 +95,14 @@ struct RGBLedMatrixOptions {
    */
   int pwm_lsb_nanoseconds;
 
+<<<<<<< HEAD
+=======
+  /* The lower bits can be time-dithered for higher refresh rate.
+   * Corresponding flag: --led-pwm-dither-bits
+   */
+  int pwm_dither_bits;
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   /* The initial brightness of the panel in percent. Valid range is 1..100
    * Corresponding flag: --led-brightness
    */
@@ -120,6 +128,15 @@ struct RGBLedMatrixOptions {
    */
   const char *led_rgb_sequence;     /* Corresponding flag: --led-rgb-sequence */
 
+<<<<<<< HEAD
+=======
+  /* A string describing a sequence of pixel mappers that should be applied
+   * to this matrix. A semicolon-separated list of pixel-mappers with optional
+   * parameter.
+   */
+  const char *pixel_mapper_config;  /* Corresponding flag: --led-pixel-mapper */
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
   /** The following are boolean flags, all off by default **/
 
   /* Allow to use the hardware subsystem to create pulses. This won't do

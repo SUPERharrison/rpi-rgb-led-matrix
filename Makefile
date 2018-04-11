@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CXXFLAGS=-Wall -O3 -g
 OBJECTS=demo-main.o minimal-example.o text-example.o led-image-viewer.o
 BINARIES=led-matrix minimal-example text-example
@@ -19,6 +20,19 @@ CSHARP_LIB_DIR=bindings/c\#
 MAGICK_CXXFLAGS=`GraphicsMagick++-config --cppflags --cxxflags`
 MAGICK_LDFLAGS=`GraphicsMagick++-config --ldflags --libs`
 
+=======
+# This toplevel Makefile compiles the library in the lib subdirectory.
+# If you want to see how to integrate the library in your own projects, check
+# out the sub-directories examples-api-use/ and utils/
+RGB_LIBDIR=./lib
+RGB_LIBRARY_NAME=rgbmatrix
+RGB_LIBRARY=$(RGB_LIBDIR)/lib$(RGB_LIBRARY_NAME).a
+
+# Some language bindings.
+PYTHON_LIB_DIR=bindings/python
+CSHARP_LIB_DIR=bindings/c\#
+
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 all : $(RGB_LIBRARY)
 
 $(RGB_LIBRARY): FORCE

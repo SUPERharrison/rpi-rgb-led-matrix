@@ -2,6 +2,7 @@
 *.a
 *~
 *.so
+<<<<<<< HEAD
 led-image-viewer
 demo
 minimal-example
@@ -10,3 +11,5 @@ c-example
 clock
 *.dll
 *.exe
+=======
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7

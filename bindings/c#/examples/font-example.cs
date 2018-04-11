@@ -16,9 +16,6 @@ namespace font_example
             string text = "abcdefghijklmnopqrstuvwxyz";
             string text_high = "AAPL 123.45";
             string text_low = "@ 12.4%";
-            if (args.Length > 1)            
-                text = args[1];
-            
 
             var matrix = new RGBLedMatrix(16, 0, 0);
             var canvas = matrix.CreateOffscreenCanvas();
@@ -67,7 +64,6 @@ namespace font_example
                     Thread.Sleep(100);
 		}
 		*/
-
 
             return 0;
         }

@@ -45,16 +45,30 @@ namespace rpi_rgb_led_matrix_sharp
                 // pass in options to interal data structure           
                 opt.chain_length = options.ChainLength;
                 opt.rows = options.Rows;
+<<<<<<< HEAD
                 opt.hardware_mapping = options.HardwareMapping != null ? Marshal.StringToHGlobalAnsi(options.HardwareMapping) : IntPtr.Zero;
                 opt.inverse_colors = (uint)(options.InverseColors ? 0 : 1);  
                 opt.led_rgb_sequence = options.LedRgbSequence != null ? Marshal.StringToHGlobalAnsi(options.LedRgbSequence) : IntPtr.Zero;
                 opt.parallel = options.Parallel;
+=======
+                opt.cols = options.Cols;
+                opt.hardware_mapping = options.HardwareMapping != null ? Marshal.StringToHGlobalAnsi(options.HardwareMapping) : IntPtr.Zero;
+                opt.inverse_colors = (uint)(options.InverseColors ? 0 : 1);  
+                opt.led_rgb_sequence = options.LedRgbSequence != null ? Marshal.StringToHGlobalAnsi(options.LedRgbSequence) : IntPtr.Zero;
+                opt.pixel_mapper_config = options.PixelMapperConfig != null ? Marshal.StringToHGlobalAnsi(options.PixelMapperConfig) : IntPtr.Zero;
+                opt.parallel = options.Parallel;
+                opt.multiplexing = options.Multiplexing;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
                 opt.pwm_bits = options.PwmBits;
                 opt.pwm_lsb_nanoseconds = options.PwmLsbNanoseconds;
                 opt.scan_mode = options.ScanMode;
                 opt.show_refresh_rate = (uint)(options.ShowRefreshRate ? 0 : 1);
                 opt.brightness = options.Brightness;
                 opt.disable_hardware_pulsing = (uint)(options.DisableHardwarePulsing ? 1 : 0);
+<<<<<<< HEAD
+=======
+                opt.row_address_type = options.RowAddressType;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
 
                 // dont care about these
                 var argc = IntPtr.Zero;
@@ -65,6 +79,10 @@ namespace rpi_rgb_led_matrix_sharp
             {
                 if (options.HardwareMapping != null) Marshal.FreeHGlobal(opt.hardware_mapping);
                 if (options.LedRgbSequence != null) Marshal.FreeHGlobal(opt.led_rgb_sequence);
+<<<<<<< HEAD
+=======
+                if (options.PixelMapperConfig != null) Marshal.FreeHGlobal(opt.pixel_mapper_config);
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
             }
         }
 
@@ -114,16 +132,31 @@ namespace rpi_rgb_led_matrix_sharp
         {
             public IntPtr hardware_mapping;
             public int rows;
+<<<<<<< HEAD
             public int chain_length;
             public int parallel;
+=======
+            public int cols;
+            public int chain_length;
+            public int parallel;
+            public int multiplexing;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
             public int pwm_bits;
             public int pwm_lsb_nanoseconds;
             public int brightness;
             public int scan_mode;
             public IntPtr led_rgb_sequence;
+<<<<<<< HEAD
             public uint disable_hardware_pulsing;
             public uint show_refresh_rate;
             public uint inverse_colors;
+=======
+            public IntPtr pixel_mapper_config; 
+            public uint disable_hardware_pulsing;
+            public uint show_refresh_rate;
+            public uint inverse_colors;
+            public int row_address_type;
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         };
         #endregion
     }
@@ -142,6 +175,18 @@ namespace rpi_rgb_led_matrix_sharp
         public int Rows;
 
         /// <summary>
+<<<<<<< HEAD
+=======
+        /// The "cols" are the number of columns per panel. Typically something
+        /// like 32, but also 64 is possible. Sometimes even 40.
+        /// cols * chain_length is the total length of the display, so you can
+        /// represent a 64 wide display as cols=32, chain=2 or cols=64, chain=1;
+        /// same thing, but more convenient to think of.
+        /// </summary>
+        public int Cols;
+
+        /// <summary>
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         /// The chain_length is the number of displays daisy-chained together
         /// (output of one connected to input of next). Default: 1
         /// </summary>
@@ -179,11 +224,35 @@ namespace rpi_rgb_led_matrix_sharp
         public int ScanMode;
 
         /// <summary>
+<<<<<<< HEAD
+=======
+        /// Default row address type is 0, corresponding to direct setting of the
+        /// row, while row address type 1 is used for panels that only have A/B,
+        /// typically some 64x64 panels
+        /// </summary>
+        public int RowAddressType;  
+
+        /// <summary>
+        /// Type of multiplexing. 0 = direct, 1 = stripe, 2 = checker (typical 1:8)
+        /// </summary>
+        public int Multiplexing;
+
+        /// <summary>
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         /// In case the internal sequence of mapping is not "RGB", this contains the real mapping. Some panels mix up these colors.
         /// </summary>         
         public string LedRgbSequence;
 
         /// <summary>
+<<<<<<< HEAD
+=======
+        /// A string describing a sequence of pixel mappers that should be applied
+        /// to this matrix. A semicolon-separated list of pixel-mappers with optional
+        /// parameter.
+        public string PixelMapperConfig;
+
+        /// <summary>
+>>>>>>> d25e9b6a2d0fa1879927ed18780b27e8464352f7
         /// Allow to use the hardware subsystem to create pulses. This won't do anything if output enable is not connected to GPIO 18.
         /// </summary>
         public bool DisableHardwarePulsing;
