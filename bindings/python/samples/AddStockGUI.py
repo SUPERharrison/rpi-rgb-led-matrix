@@ -15,6 +15,17 @@ def addStock(editText):
     # f = open("stockConfig.py", "w+")
     # f.write("stocks = ")
     # f.write(str(stockConfig.stocks))
+    filename = "stockConfig.py"
+    f = open(filename)
+
+    stock_list = list(f)
+    print("stock_list = " + str(stock_list))
+    print("type(stock_list) = " + str(type(stock_list)))
+    # try:
+    #     for line in f:
+    #         print(line),
+    # finally:
+    #     f.close()
     
 
 stockList = stockConfig.stocks
