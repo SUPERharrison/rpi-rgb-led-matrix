@@ -23,8 +23,8 @@ class RunText(SampleBase):
         pos = offscreen_canvas.width
 
         # important data for accessing the stock API (pulls information)
-        intrinio.client.username = ''
-        intrinio.client.password = ''
+        intrinio.client.username = '8f8b30cbd435e8b001cd4ef0c3e23635'
+        intrinio.client.password = '2ff6afdc9c1ad05a93a08776c0bbff92'
 
         # get the yesterday
         yesterday = date.today() - timedelta(7)
